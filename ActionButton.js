@@ -39,28 +39,28 @@ export default class ActionButton extends Component {
     clearTimeout(this.timeout);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.resetToken !== this.state.resetToken) {
-      if (nextProps.active === false && this.state.active === true) {
-        if (this.props.onReset) this.props.onReset();
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.resetToken !== prevState.resetToken) {
+      if (this.props.active === false && prevState.active === true) {
+        if (prevProps.onReset) prevProps.onReset();
         Animated.spring(this.anim, { toValue: 0 }).start();
         setTimeout(
           () =>
-            this.setState({ active: false, resetToken: nextProps.resetToken }),
+            this.setState({ active: false, resetToken: this.props.resetToken }),
           250
         );
         return;
       }
 
-      if (nextProps.active === true && this.state.active === false) {
+      if (this.props.active === true && prevState.active === false) {
         Animated.spring(this.anim, { toValue: 1 }).start();
-        this.setState({ active: true, resetToken: nextProps.resetToken });
+        this.setState({ active: true, resetToken: this.props.resetToken });
         return;
       }
 
       this.setState({
-        resetToken: nextProps.resetToken,
-        active: nextProps.active
+        resetToken: this.props.resetToken,
+        active: this.props.active
       });
     }
   }
